@@ -1,0 +1,57 @@
+import pandas as pd
+
+# Load the baby names of year 1880 dataset
+names1880 = pd.read_csv(
+    "C:/Users/Lenovo/Downloads/names/yob1880.txt",
+    names = ["name", "sex", "births"])
+
+print(names1880)
+
+
+# sum of the births column by sex as the total number of births in that year:
+
+print(names1880.groupby("sex")["births"].sum())
+
+names2023 = pd.read_csv(
+    "C:/Users/Lenovo/Downloads/names/yob2023.txt",
+    names = ["name", "sex", "births"])
+
+print(names2023)
+
+
+# Combining All Yearly Files into a Single DataFrame
+import pandas as pd
+
+pieces = []
+
+for year in range(1880, 2024):
+    path = f"C:/Users/Lenovo/Downloads/names/yob{year}.txt"
+    frame = pd.read_csv(path, names=["name", "sex", "births"])
+
+    # Add year INSIDE the loop
+    frame["year"] = year
+
+    # Append each year's dataframe INSIDE the loop
+    pieces.append(frame)
+
+# Concatenate everything
+baby_names = pd.concat(pieces, ignore_index=True)
+
+print(baby_names)
+
+# Aggregating Births by Year and Sex Using pivot_table
+
+total_births = baby_names.pivot_table("births", index="year", columns="sex", aggfunc=sum)
+total_births.tail()
+
+print(total_births)
+
+
+import matplotlib.pyplot as plt
+
+total_births.plot(title="Total births by sex and year", color=["Pink", "Blue"])
+plt.xlabel("Year")
+plt.ylabel("Total Births")
+plt.show()
+
+
